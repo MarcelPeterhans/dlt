@@ -27,25 +27,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        name: Login to ACR
-        uses: docker/login-action@v1
-        with:
-          registry: acr4demoaks.azurecr.io
-          username: ${{ secrets.AZURE_CLIENT_ID }}
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
-        - run: |
-            cd message-creator-node
-            docker build . -t acr4demoaks.azurecr.io/dapr-demo/message-creator-node:latest .
-            docker push acr4demoaks.azurecr.io/dapr-demo/message-creator-node:latest
+    - uses: azure/docker-login@v1
+      with:
+        login-server: acr4demoaks.azurecr.io
+        username: ${{ secrets.AZURE_CLIENT_ID }}
+        password: ${{ secrets.AZURE_CLIENT_SECRET }}
 
-            cd message-filter-dotnet
-            docker build . -t acr4demoaks.azurecr.io/dapr-demo/message-filter-dotnet:latest .
-            docker push acr4demoaks.azurecr.io/dapr-demo/message-filter-dotnet:latest
-
-            cd message-receiver-dotnet
-            docker build . -t acr4demoaks.azurecr.io/dapr-demo/message-receiver-dotnet:latest .
-            docker push acr4demoaks.azurecr.io/dapr-demo/message-receiver-dotnet:latest
-
-            cd message-subscriber-python
-            docker build . -t acr4demoaks.azurecr.io/dapr-demo/message-subscriber-python:latest .
-            docker push acr4demoaks.azurecr.io/dapr-demo/message-subscriber-python:latest
+    - run: |
+      cd message-creator-node
+      docker build . -t acr4demoaks.azurecr.io/message-creator-node:${{ github.sha }}
+      docker push acr4demoaks.azurecr.io/message-creator-node:${{ github.sha }}
