@@ -1,0 +1,48 @@
+az login
+az account list 
+
+SUBSCRIPTION_ID="60720087-6a7a-43e4-abe9-6ddededb6d77" # here enter your subscription id
+DEPLOYMENT_NAME="aks" # short unique name, min 5 max 8 letters 
+LOCATION="westeurope" # here enter the datacenter location
+RG_GROUP="${DEPLOYMENT_NAME}" # here enter the resources group name of your aks cluster
+AKS_NAME="${DEPLOYMENT_NAME}4demo" # here enter the name of your kubernetes resource
+VNET_NAME="${DEPLOYMENT_NAME}vnet" # here enter the name of your vnet
+SUBNET_NAME="${DEPLOYMENT_NAME}subnet" # here enter the name of your ingress subnet
+ACR_NAME="acr4demo${DEPLOYMENT_NAME}" 
+LA_NAME="la4demo${DEPLOYMENT_NAME}" # here enter the name of your vnet
+SP_NAME="SP4demo${DEPLOYMENT_NAME}"
+# KUBE_VERSION="$(az aks get-versions -l $LOCATION --query 'orchestrators[?default == `true`].orchestratorVersion' -o tsv)"
+
+
+az account set --subscription $SUBSCRIPTION_ID
+az group create --name $RG_GROUP -l $LOCATION
+rgId=$(az group show --name $RG_GROUP --query id --output tsv)
+
+az acr create --resource-group $RG_GROUP --name $ACR_NAME --sku Basic --admin-enabled true
+#az acr build --registry $ACR_NAME --image react-clock-basic:v1 .
+# az keyvault create --name "AKSKeyVault4Logging" --resource-group "AKSLogging" --location "WestEurope"
+# az ad sp create-for-rbac --name aksSP4Logging --create-cert --cert "Cert4Logging" --keyvault "AKSKeyVault4Logging"
+# az ad sp create-for-rbac --skip-assignment --name $SP_NAME
+
+az ad sp create-for-rbac --name $SP_NAME --scope $rgId --role Contributor --sdk-auth
+
+# versions
+az aks get-versions --location "WestEurope" --output table
+
+az network vnet create -g $RG_GROUP -n $VNET_NAME --address-prefixes 10.0.4.0/22
+az network vnet subnet create -g $RG_GROUP --vnet-name $VNET_NAME -n $SUBNET_NAME --address-prefix 10.0.4.0/24
+SUBNET_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME"
+
+# Create a LogAnalytics Workspace
+az monitor log-analytics workspace create --resource-group $RG_GROUP --workspace-name $LA_NAME --location $LOCATION
+# --network-plugin azure
+# --vnet-subnet-id
+#az aks create --resource-group $RG_GROUP --name $AKS_NAME --vm-set-type VirtualMachineScaleSets --enable-addons monitoring --node-vm-size Standard_D2_v3 --vnet-subnet-id $SUBNET_ID --kubernetes-version 1.19.7 --node-count 2 --generate-ssh-keys --attach-acr $ACR_NAME --network-plugin azure --dns-service-ip 10.4.0.10 --service-cidr 10.0.4.0/24 --service-principal $APP_ID --client-secret $PWD
+#az aks create --resource-group $RG_GROUP --name $AKS_NAME --vm-set-type VirtualMachineScaleSets --enable-addons monitoring --node-vm-size Standard_D2_v3 --kubernetes-version 1.19.7 --node-count 2 --generate-ssh-keys --attach-acr $ACR_NAME --network-plugin azure --dns-service-ip 10.0.4.10 --service-cidr 10.0.4.0/24
+az aks create --resource-group $RG_GROUP --name $AKS_NAME --vm-set-type VirtualMachineScaleSets --enable-addons monitoring --node-vm-size Standard_D2_v3 --vnet-subnet-id $SUBNET_ID --kubernetes-version 1.19.7 --node-count 2 --generate-ssh-keys --attach-acr $ACR_NAME --network-plugin azure --docker-bridge-address 172.17.0.1/16 --dns-service-ip 10.2.0.10 --service-cidr 10.2.0.0/24
+az aks get-credentials --resource-group $RG_GROUP --name $AKS_NAME
+
+kubectl get nodes
+kubectl apply -f voteApp/vote.yaml
+
+# https://docs.microsoft.com/en-us/azure/aks/kubernetes-action
