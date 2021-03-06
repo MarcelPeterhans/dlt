@@ -15,6 +15,7 @@ namespace message_receiver.Controllers
 
         public PingController(ILogger<PingController> logger)
         {
+            //Logger
             _logger = logger;
         }
 
