@@ -30,3 +30,12 @@ jobs:
     - uses: actions/checkout@v2
     - run: |
         cd message-creator-node
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: acr4demoaks.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build . -t acr4demoaks.azurecr.io/message-creator-node:latest .
+        docker push acr4demoaks.azurecr.io/message-creator-node:latest
