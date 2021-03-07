@@ -15,7 +15,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./src
+    working-directory: src/message-creator-node
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -27,13 +27,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job. 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: azure/docker-login@v1
       with:
         login-server: acr4demoaks.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-    - name: build and test
-      working-directory: src/message-creator-node
-      run: |
+    - run: |
+        ls la
         docker build . -t acr4demoaks.azurecr.io/message-creator-node:latest .
         docker push acr4demoaks.azurecr.io/message-creator-node:latest
