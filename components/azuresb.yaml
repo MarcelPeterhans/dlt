@@ -7,7 +7,7 @@ spec:
   version: v1
   metadata:
   - name: connectionString
-    value: "HERE_CONNECTIONSTRING_KEY" # Required.
+    value: "t+DO2MterfzcMIhZu99NxX0omIbKs9EPTee8=" # Required.
   # - name: timeoutInSec
   #   value: <REPLACE-WITH-TIMEOUT-IN-SEC> # Optional. Default: "60". Timeout for sending messages and management operations.
   # - name: handlerTimeoutInSec

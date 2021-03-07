@@ -46,3 +46,13 @@ kubectl get nodes
 kubectl apply -f voteApp/vote.yaml
 
 # https://docs.microsoft.com/en-us/azure/aks/kubernetes-action
+
+# Create SB Namespace
+SB_NAMESPACE=dzdapr$RANDOM
+LOCATION=westeurope
+
+az servicebus namespace create --resource-group $RG_GROUP --name $SB_NAMESPACE --location $LOCATION
+az servicebus namespace authorization-rule keys list --name RootManageSharedAccessKey --namespace-name $SB_NAMESPACE --resource-group $RG_GROUP --query "primaryConnectionString" | tr -d '"'
+SB_CONNECTIONSTRING=$(az servicebus namespace authorization-rule keys list --name RootManageSharedAccessKey --namespace-name $SB_NAMESPACE --resource-group $RG_GROUP --query "primaryConnectionString" | tr -d '"')
+
+dapr init -k
