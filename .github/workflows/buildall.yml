@@ -35,5 +35,6 @@ jobs:
 
     - run: |
       cd message-creator-node
+      docker login acr4demoaks.azurecr.io
       docker build . -t acr4demoaks.azurecr.io/message-creator-node:${{ github.sha }}
       docker push acr4demoaks.azurecr.io/message-creator-node:${{ github.sha }}
