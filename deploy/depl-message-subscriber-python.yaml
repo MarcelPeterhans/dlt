@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: message-subscriber
-        image: ghcr.io/denniszielke/dapr-demo/message-subscriber-python:latest
+        image: acr4demoaks.azurecr.io/message-subscriber-python:latest
         ports:
         - containerPort: 5000
         imagePullPolicy: Always

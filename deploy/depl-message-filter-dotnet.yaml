@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: message-filter
-        image: ghcr.io/denniszielke/dapr-demo/message-filter-dotnet:latest
+        image: acr4demoaks.azurecr.io/message-filter-dotnet:latest
         ports:
         - containerPort: 3000
         imagePullPolicy: Always

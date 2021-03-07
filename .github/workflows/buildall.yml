@@ -37,3 +37,17 @@ jobs:
         cd message-creator-node
         docker build -t acr4demoaks.azurecr.io/message-creator-node:latest .
         docker push acr4demoaks.azurecr.io/message-creator-node:latest
+        
+        cd ../message-filter-dotnet
+        docker build -t acr4demoaks.azurecr.io/message-filter-dotnet:latest .
+        docker push acr4demoaks.azurecr.io/message-filter-dotnet:latest
+
+        cd ../message-receiver-dotnet
+        docker build -t acr4demoaks.azurecr.io/message-receiver-dotnet:latest .
+        docker push acr4demoaks.azurecr.io/message-receiver-dotnet:latest
+
+        cd ../message-subscriber-python
+        docker build -t acr4demoaks.azurecr.io/message-subscriber-python:latest .
+        docker push acr4demoaks.azurecr.io/message-subscriber-python:latest
+
+
