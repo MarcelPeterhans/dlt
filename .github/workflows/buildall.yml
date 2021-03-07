@@ -28,6 +28,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: azure/docker-login@v1
+      working-directory: ./src
       with:
         login-server: acr4demoaks.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
