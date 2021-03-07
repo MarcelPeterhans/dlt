@@ -28,11 +28,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it.
     - uses: azure/docker-login@v1
-
+      with:
+        login-server: acr4demoaks.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-    
-      cd message-creator-node
-
-      docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} acr4demoaks.azurecr.io
-      docker build . -t acr4demoaks.azurecr.io/message-creator-node:${{ github.sha }}
-      docker push acr4demoaks.azurecr.io/message-creator-node:${{ github.sha }}
+        cd message-creator-node
+        docker build . -t acr4demoaks.azurecr.io/message-creator-node:latest .
+        docker push acr4demoaks.azurecr.io/message-creator-node:latest
