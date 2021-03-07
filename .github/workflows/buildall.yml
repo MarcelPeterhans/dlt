@@ -33,8 +33,7 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - name: build and test
-      working-directory: src
+      working-directory: ./src/message-creator-node
       run: |
-        cd message-creator-node
         docker build . -t acr4demoaks.azurecr.io/message-creator-node:latest .
         docker push acr4demoaks.azurecr.io/message-creator-node:latest
