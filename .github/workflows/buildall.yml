@@ -33,6 +33,6 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run: |
-        ls la
+        ls -a
         docker build . -t acr4demoaks.azurecr.io/message-creator-node:latest .
         docker push acr4demoaks.azurecr.io/message-creator-node:latest
