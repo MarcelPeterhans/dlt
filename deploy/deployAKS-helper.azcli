@@ -60,3 +60,29 @@ dapr init -k
 kubectl apply -f components
 kubectl apply -f deploy
 kubectl port-forward deployment/message-creator-app 3000
+#---------------------------------------------------------------------
+kubectl get namespaces
+    #NAME              STATUS   AGE
+    #===> dapr-system       Active   24h
+    #default           Active   5d8h
+    #kube-node-lease   Active   5d8h
+    #kube-public       Active   5d8h
+    #kube-system       Active   5d8h
+
+# Show dapr commands
+dapr
+
+kubectl get all -n dapr-system
+
+kubectl port-forward service/dapr-dashboard 8080:8080 -n dapr-system
+>> http://localhost:8080/overview
+
+kubectl get pods -n default
+
+kubectl get components -A
+
+kubectl describe pod -n default message-filter-app-5c55f9f667-lj2gl
+
+# Show services (see dapr services that I didn't deploy)
+kubectl get svc -n default
+
