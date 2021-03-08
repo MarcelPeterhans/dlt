@@ -47,7 +47,7 @@ kubectl apply -f voteApp/vote.yaml
 
 # https://docs.microsoft.com/en-us/azure/aks/kubernetes-action
 
-# Create SB Namespace
+# Dennis Sample - Create SB Namespace
 SB_NAMESPACE=dzdapr$RANDOM
 LOCATION=westeurope
 
@@ -56,3 +56,7 @@ az servicebus namespace authorization-rule keys list --name RootManageSharedAcce
 SB_CONNECTIONSTRING=$(az servicebus namespace authorization-rule keys list --name RootManageSharedAccessKey --namespace-name $SB_NAMESPACE --resource-group $RG_GROUP --query "primaryConnectionString" | tr -d '"')
 
 dapr init -k
+
+kubectl apply -f components
+kubectl apply -f deploy
+kubectl port-forward deployment/message-creator-app 3000
